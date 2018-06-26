@@ -30,29 +30,7 @@ class Routes{
 	socketEvents(){	
 
 		this.io.on('connection', (socket) => {
-
 			detectWebcamFace.startDetectFaces(this.io);
-
-		// 	socket.on('username', (userName) => {
-
-		//       	this.users.push({
-		//       		id : socket.id,
-		//       		userName : userName
-		//       	});
-
-		//       	let len = this.users.length;
-		//       	len--;
-
-		//       	this.io.emit('userList',this.users,this.users[len].id); 
-		//     });
-
-		//     socket.on('getMsg', (data) => {
-		//     	socket.broadcast.to(data.toid).emit('sendMsg',{
-		//     		msg:data.msg,
-		//     		name:data.name
-		//     	});
-		//     });
-
 		});
 
 		
