@@ -39,9 +39,8 @@ class OpencvHelpers {
 				// draw detection
 				faceRects.forEach(faceRect => drawBlueRect(frameResized, faceRect));
 			}
-			
-			socketIO.emit('frame', {
-				buffer: Buffer.from(JSON.stringify(cv.imencode('.jpg', frame.resizeToMax(320))))
+			socketIO.emit('face', {
+				buffer: cv.imencode('.jpg', frameResized)
 			});
 			
 		});
