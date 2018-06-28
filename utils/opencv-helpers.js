@@ -31,7 +31,7 @@ class OpencvHelpers {
 
 	runVideoFaceDetection(src, detectFaces, socketIO) {
 		this.grabFrames(src, 1, (frame) => {
-			const frameResized = frame.resizeToMax(800);
+			const frameResized = frame.resizeToMax(320);
 
 			// detect faces
 			const faceRects = detectFaces(frameResized);

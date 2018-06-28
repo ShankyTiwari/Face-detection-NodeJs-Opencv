@@ -1,6 +1,6 @@
 'use strict';
 
-const socket = io.connect('http://localhost:3000/');
+const socket = io.connect('http://localhost:5000/');
 
 const canvas = document.getElementById('canvas-video');
 const context = canvas.getContext('2d');
