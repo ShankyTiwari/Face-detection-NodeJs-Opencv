@@ -2,6 +2,11 @@ const cv= require('opencv4nodejs');
 
 class OpencvHelpers {
 
+	constructor() {
+		this.camFps = 10;
+		this.camInterval = Math.ceil(1000 / this.camFps)
+	}
+
 	grabFrames(videoFile, delay, onFrame) {
 		const cap = new cv.VideoCapture(videoFile);
 		let done = false;
@@ -20,7 +25,7 @@ class OpencvHelpers {
 				clearInterval(intvl);
 				console.log('Key pressed, exiting.');
 			}
-		}, 0);
+		}, this.camInterval);
 	}
 
 	drawBlueRect(image, rect, opts = {
