@@ -28,10 +28,19 @@ class OpencvHelpers {
 		}, this.camInterval);
 	}
 
+	drawRect(image, rect, color, opts = { thickness: 2 }){
+		image.drawRectangle(
+			rect,
+			color,
+			opts.thickness,
+			cv.LINE_8
+		);
+	}
+
 	drawBlueRect(image, rect, opts = {
 			thickness: 2
 	}) {
-		drawRect(image, rect, new cv.Vec(255, 0, 0), opts);
+		this.drawRect(image, rect, new cv.Vec(255, 0, 0), opts);
 	}
 
 	runVideoFaceDetection(src, detectFaces, socketIO) {
@@ -42,7 +51,7 @@ class OpencvHelpers {
 			const faceRects = detectFaces(frameResized);
 			if (faceRects.length) {
 				// draw detection
-				faceRects.forEach(faceRect => drawBlueRect(frameResized, faceRect));
+				faceRects.forEach(faceRect => this.drawBlueRect(frameResized, faceRect));
 			}
 			socketIO.emit('face', {
 				buffer: cv.imencode('.jpg', frameResized)
