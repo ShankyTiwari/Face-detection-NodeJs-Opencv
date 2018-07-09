@@ -1,6 +1,6 @@
 'use strict';
 
-const socket = io.connect('http://localhost:5000/');
+const socket = io.connect('http://localhost:3000/');
 
 const canvas = document.getElementById('canvas-video');
 const context = canvas.getContext('2d');
@@ -17,5 +17,5 @@ socket.on('face', function (data) {
 	img.onload = function () {
 		context.drawImage(this, 0, 0, canvas.width, canvas.height);
 	};
-	img.src = 'data:image/png;base64,' + base64String;
+	img.src = 'data:image/jpg;base64,' + base64String;
 });

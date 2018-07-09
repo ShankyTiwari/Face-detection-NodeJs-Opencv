@@ -1,0 +1,29 @@
+body {
+	font-family: cursive;
+}
+
+.face-detect{
+	width: 80%;
+	margin: auto;
+	display: flex;
+	flex-direction: row;
+	padding: 2%;
+}
+
+.examples{
+    width: 40%;
+    padding-top: 2%;
+    height: 100px;
+    text-align: center;
+    margin: 5%;
+    border-radius: 50px;
+	border: solid 5px #a1a1a1;
+	cursor: pointer;
+	text-decoration: none;
+	color: #a1a1a1;
+	font-size: 30px;
+}
+
+.example{
+	margin: 1%;
+}

@@ -11,7 +11,7 @@ class Config{
 		app.set('views', (__dirname + '/../views'));
 
 		//Files 
-		app.use(require('express').static(require('path').join('public_data')));
+		app.use(require('express').static(require('path').join('data')));
 
 	}
 }

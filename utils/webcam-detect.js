@@ -19,8 +19,10 @@ class DetectWebcamFace{
 		return classifier.detectMultiScale(img.bgrToGray(), options).objects;
 	}
 
-	startDetectFaces(socketIO) {
-		opencvHepers.runVideoFaceDetection(this.webcamPort, this.detectFaces, socketIO);
+	startDetectFaces(callback) {
+		opencvHepers.runVideoFaceDetection(this.webcamPort, this.detectFaces, (imageBuffers) => {
+			callback(imageBuffers);
+		});
 	}
 }
 

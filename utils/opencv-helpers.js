@@ -1,4 +1,5 @@
-const cv= require('opencv4nodejs');
+const cv = require('opencv4nodejs');
+const path = require('path');
 
 class OpencvHelpers {
 
@@ -7,10 +8,71 @@ class OpencvHelpers {
 		this.camInterval = Math.ceil(1000 / this.camFps)
 	}
 
-	grabFrames(videoFile, delay, onFrame) {
+
+	getDataFilePath(fileName) {
+		return path.resolve(path.resolve(__dirname, '../data'), fileName);
+	}
+
+	drawRect(image, rect, color, opts = {
+		thickness: 2
+	}) {
+		image.drawRectangle(
+			rect,
+			color,
+			opts.thickness,
+			cv.LINE_4
+		);
+	}
+
+	drawBlueRect(image, rect, opts = {
+		thickness: 2
+	}) {
+		this.drawRect(image, rect, new cv.Vec(250, 0, 0), opts);
+	}
+
+	 detectFace() {
+		return new Promise( (resolve, reject) => {
+			try {
+				const image = cv.imread(this.getDataFilePath('g.r.l.jpeg'));
+				const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
+
+				// detect faces
+				const {
+					objects,
+					numDetections
+				} = classifier.detectMultiScale(image.bgrToGray());
+
+				if (!objects.length) {
+					throw new Error('No faces detected!');
+				}
+
+				// draw detection
+				const numDetectionsTh = 10;
+				objects.forEach((rect, i) => {
+					const thickness = numDetections[i] < numDetectionsTh ? 1 : 2;
+					this.drawBlueRect(image, rect, {
+						thickness
+					});
+				});
+				
+				this.saveFaceDetectedImage(image);
+				
+				resolve(cv.imencode('.jpg', image));
+				
+			} catch (error) {
+				console.log(error);
+				reject(null);
+			}
+		});
+	}
+
+	saveFaceDetectedImage(data) {
+		cv.imwrite(this.getDataFilePath('g.r.l2.jpeg'), data)
+	}
+
+	grabFrames(videoFile, onFrame) {
 		const cap = new cv.VideoCapture(videoFile);
-		let done = false;
-		const intvl = setInterval(() => {
+		setInterval(() => {
 			let frame = cap.read();
 			// loop back to start on end of stream reached
 			if (frame.empty) {
@@ -18,24 +80,11 @@ class OpencvHelpers {
 				frame = cap.read();
 			}
 			onFrame(frame);
-
-			const key = cv.waitKey(delay);
-			done = key !== -1 && key !== 255;
-			if (done) {
-				clearInterval(intvl);
-				console.log('Key pressed, exiting.');
-			}
 		}, this.camInterval);
 	}
 
-	drawBlueRect(image, rect, opts = {
-			thickness: 2
-	}) {
-		drawRect(image, rect, new cv.Vec(255, 0, 0), opts);
-	}
-
-	runVideoFaceDetection(src, detectFaces, socketIO) {
-		this.grabFrames(src, 1, (frame) => {
+	runVideoFaceDetection(src, detectFaces, callback) {
+		this.grabFrames(src, (frame) => {
 			const frameResized = frame.resizeToMax(320);
 
 			// detect faces
@@ -44,10 +93,7 @@ class OpencvHelpers {
 				// draw detection
 				faceRects.forEach(faceRect => drawBlueRect(frameResized, faceRect));
 			}
-			socketIO.emit('face', {
-				buffer: cv.imencode('.jpg', frameResized)
-			});
-			
+			callback(cv.imencode('.jpg', frameResized));
 		});
 	}
 }
