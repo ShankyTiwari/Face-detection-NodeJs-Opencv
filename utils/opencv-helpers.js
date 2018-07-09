@@ -13,28 +13,24 @@ class OpencvHelpers {
 		return path.resolve(path.resolve(__dirname, '../data'), fileName);
 	}
 
-	drawRect(image, rect, color, opts = {
-		thickness: 2
-	}) {
+	drawRect(image, rect, color) {
 		image.drawRectangle(
 			rect,
 			color,
-			opts.thickness,
+			2,
 			cv.LINE_4
 		);
 	}
 
-	drawBlueRect(image, rect, opts = {
-		thickness: 2
-	}) {
-		this.drawRect(image, rect, new cv.Vec(250, 0, 0), opts);
+	drawFaceBorder(image, rect) {
+		this.drawRect(image, rect, new cv.Vec(0, 255, 0));
 	}
 
-	 detectFace() {
+	detectFace() {
 		return new Promise( (resolve, reject) => {
 			try {
 				const image = cv.imread(this.getDataFilePath('g.r.l.jpeg'));
-				const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_ALT2);
+				const classifier = new cv.CascadeClassifier(cv.HAAR_FRONTALFACE_DEFAULT);
 
 				// detect faces
 				const {
@@ -46,13 +42,8 @@ class OpencvHelpers {
 					throw new Error('No faces detected!');
 				}
 
-				// draw detection
-				const numDetectionsTh = 10;
 				objects.forEach((rect, i) => {
-					const thickness = numDetections[i] < numDetectionsTh ? 1 : 2;
-					this.drawBlueRect(image, rect, {
-						thickness
-					});
+					this.drawFaceBorder(image, rect);
 				});
 				
 				this.saveFaceDetectedImage(image);
@@ -91,7 +82,7 @@ class OpencvHelpers {
 			const faceRects = detectFaces(frameResized);
 			if (faceRects.length) {
 				// draw detection
-				faceRects.forEach(faceRect => this.drawBlueRect(frameResized, faceRect));
+				faceRects.forEach(faceRect => this.drawFaceBorder(frameResized, faceRect));
 			}
 			callback(cv.imencode('.jpg', frameResized));
 		});
