@@ -58,7 +58,7 @@ class OpencvHelpers {
 				this.saveFaceDetectedImage(image);
 				
 				resolve(cv.imencode('.jpg', image));
-				
+
 			} catch (error) {
 				console.log(error);
 				reject(null);
@@ -91,7 +91,7 @@ class OpencvHelpers {
 			const faceRects = detectFaces(frameResized);
 			if (faceRects.length) {
 				// draw detection
-				faceRects.forEach(faceRect => drawBlueRect(frameResized, faceRect));
+				faceRects.forEach(faceRect => this.drawBlueRect(frameResized, faceRect));
 			}
 			callback(cv.imencode('.jpg', frameResized));
 		});
