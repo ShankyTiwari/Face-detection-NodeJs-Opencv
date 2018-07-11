@@ -34,8 +34,7 @@ class OpencvHelpers {
 
 				// detect faces
 				const {
-					objects,
-					numDetections
+					objects
 				} = classifier.detectMultiScale(image.bgrToGray());
 
 				if (!objects.length) {
